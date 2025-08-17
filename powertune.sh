@@ -33,4 +33,5 @@ sysctl -w kernel.nmi_watchdog=0
 # VM writeback timeout
 sysctl -w vm.dirty_writeback_centisecs=1500
 
+# Run once
 # midclt call system.advanced.update '{"kernel_extra_options": "i915.enable_dc=2 i915.enable_fbc=1 i915.enable_psr=1 i915.enable_rc6=7"}'
