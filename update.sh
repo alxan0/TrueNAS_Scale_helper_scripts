@@ -20,6 +20,7 @@ if [ ! -d "$REPO_DIR/.git" ]; then
 fi
 
 # --- update working tree ---
+sudo chattr -i -R "${ROOT}/TrueNAS_helper_scripts"
 git -C "$REPO_DIR" fetch --prune --depth=1 origin "$BRANCH"
 git -C "$REPO_DIR" checkout -q "$BRANCH"
 git -C "$REPO_DIR" reset -q --hard "origin/$BRANCH"
@@ -34,6 +35,10 @@ rsync -a --delete --exclude ".git" "$REPO_DIR/" "$TARGET/"
 ln -sfn "$TARGET" "$CURRENT_LINK"
 
 echo "Deployed $COMMIT at $STAMP" | tee -a "$LOG_DIR/update.log"
+
+# --- set permissions ---
+sudo chown -R truenas_admin:truenas_admin ${ROOT}/TrueNAS_helper_scripts
+sudo chmod -R 550 ${ROOT}/TrueNAS_helper_scripts
 
 # --- retention policy ---
 releases_sorted="$(find "$RELEASES" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | sort -r)"
@@ -62,3 +67,5 @@ if [ "${#filtered[@]}" -gt 0 ]; then
     rm -rf -- "$d"
   done
 fi
+
+sudo chattr +i -R "${ROOT}/TrueNAS_helper_scripts"
