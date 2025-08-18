@@ -20,8 +20,10 @@ if [ ! -d "$REPO_DIR/.git" ]; then
 fi
 
 # --- update working tree ---
-sudo chattr -i -R "${ROOT}/TrueNAS_helper_scripts"
-git -C "$REPO_DIR" fetch --prune --depth=1 origin "$BRANCH"
+sudo chattr -i -R "${ROOT}/TrueNAS_helper_scripts" 2>/dev/null
+sudo chmod -R 770 ${ROOT}/TrueNAS_helper_scripts/repo/.git
+
+git -C "$REPO_DIR" fetch --prune --depth=1 --update-shallow origin "$BRANCH"
 git -C "$REPO_DIR" checkout -q "$BRANCH"
 git -C "$REPO_DIR" reset -q --hard "origin/$BRANCH"
 
@@ -68,4 +70,4 @@ if [ "${#filtered[@]}" -gt 0 ]; then
   done
 fi
 
-sudo chattr +i -R "${ROOT}/TrueNAS_helper_scripts"
+sudo chattr +i -R "${ROOT}/TrueNAS_helper_scripts" 2>/dev/null
