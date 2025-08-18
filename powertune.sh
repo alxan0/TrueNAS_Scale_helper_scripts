@@ -14,7 +14,7 @@ for d in /sys/bus/pci/devices/*; do
   ctrl="$d/power/control"; [ -e "$ctrl" ] || continue
   class=$(cat "$d/class")
   case "$class" in
-    0x01*|0x0200*|0x0c03*) echo on   | sudo tee "$ctrl" > /dev/null ;; # storage, ethernet, USB
+    0x01*|0x0200*|0x0c03*) echo on   | sudo tee "$ctrl" > /dev/null ;; # exclude storage, ethernet, USB
     *)                      echo auto | sudo tee "$ctrl" > /dev/null ;;
   esac
 done
@@ -33,5 +33,5 @@ sysctl -w kernel.nmi_watchdog=0
 # VM writeback timeout
 sysctl -w vm.dirty_writeback_centisecs=1500
 
-# Run once
+# Enable intel iGPU power saving mode (run once, only for TrueNAS Scale)
 # midclt call system.advanced.update '{"kernel_extra_options": "i915.enable_dc=2 i915.enable_fbc=1 i915.enable_psr=1 i915.enable_rc6=7"}'
