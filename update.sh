@@ -7,7 +7,7 @@ RELEASES="${ROOT}/TrueNAS_helper_scripts/releases"
 CURRENT_LINK="${ROOT}/TrueNAS_helper_scripts/current"
 LOG_DIR="${ROOT}/TrueNAS_helper_scripts/logs"
 BRANCH="${BRANCH:-main}"
-GIT_REMOTE_URL="https://github.com/alxan0/TrueNAS_Scale_helper_scripts"
+GIT_REMOTE_URL="git@github.com:alxan0/TrueNAS_Scale_helper_scripts.git"
 
 # How many releases to keep (including the current one).
 KEEP_COUNT="${KEEP_COUNT:-2}"
@@ -20,9 +20,6 @@ if [ ! -d "$REPO_DIR/.git" ]; then
 fi
 
 # --- update working tree ---
-sudo chattr -i -R "${ROOT}/TrueNAS_helper_scripts" 2>/dev/null
-sudo chmod -R 770 ${ROOT}/TrueNAS_helper_scripts/repo/.git
-
 git -C "$REPO_DIR" fetch --prune --depth=1 --update-shallow origin "$BRANCH"
 git -C "$REPO_DIR" checkout -q "$BRANCH"
 git -C "$REPO_DIR" reset -q --hard "origin/$BRANCH"
@@ -39,7 +36,6 @@ ln -sfn "$TARGET" "$CURRENT_LINK"
 echo "Deployed $COMMIT at $STAMP" | tee -a "$LOG_DIR/update.log"
 
 # --- set permissions ---
-sudo chown -R truenas_admin:truenas_admin ${ROOT}/TrueNAS_helper_scripts
 sudo chmod -R 550 ${ROOT}/TrueNAS_helper_scripts
 
 # --- retention policy ---
@@ -69,5 +65,3 @@ if [ "${#filtered[@]}" -gt 0 ]; then
     rm -rf -- "$d"
   done
 fi
-
-sudo chattr +i -R "${ROOT}/TrueNAS_helper_scripts" 2>/dev/null
