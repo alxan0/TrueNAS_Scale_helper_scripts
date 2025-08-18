@@ -36,9 +36,6 @@ ln -sfn "$TARGET" "$CURRENT_LINK"
 
 echo "Deployed $COMMIT at $STAMP" | tee -a "$LOG_DIR/update.log"
 
-# --- set permissions ---
-sudo chmod -R 550 ${ROOT}/TrueNAS_helper_scripts
-
 # --- retention policy ---
 releases_sorted="$(find "$RELEASES" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | sort -r)"
 count=0
@@ -66,3 +63,6 @@ if [ "${#filtered[@]}" -gt 0 ]; then
     rm -rf -- "$d"
   done
 fi
+
+# --- set permissions ---
+sudo chmod -R 550 ${ROOT}/TrueNAS_helper_scripts
