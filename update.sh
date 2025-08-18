@@ -20,6 +20,7 @@ if [ ! -d "$REPO_DIR/.git" ]; then
 fi
 
 # --- update working tree ---
+sudo chmod -R 750 ${ROOT}/TrueNAS_helper_scripts
 git -C "$REPO_DIR" fetch --prune --depth=1 --update-shallow origin "$BRANCH"
 git -C "$REPO_DIR" checkout -q "$BRANCH"
 git -C "$REPO_DIR" reset -q --hard "origin/$BRANCH"
