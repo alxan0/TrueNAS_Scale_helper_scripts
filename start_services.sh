@@ -19,7 +19,6 @@ ORDER=(
   homepage
 )
 
-# === CONFIG ===
 COMPOSE_BIN="${COMPOSE_BIN:-/usr/bin/docker compose}"
 
 log() { printf "[%(%F %T)T] %s\n" -1 "$*"; }
@@ -56,7 +55,6 @@ start_stack() {
 
   log "Stopping & removing old containers for '${name}' using ${file} ..."
 
-  # Build 'down' args based on toggles
   local down_args=( -f "$file" down --remove-orphans )
   # if [[ "${PURGE_VOLUMES:-0}" == "1" ]]; then
   #   down_args+=( --volumes )
@@ -104,9 +102,13 @@ do_nextcloud_cycle() {
   # Start/stop orchestration for Nextcloud AIO mastercontainer
   # Only run during 'start' or 'restart'
   if command -v sudo &>/dev/null; then
+    sudo docker stop nextcloud-aio-apache
+    sleep 10
     sudo docker exec --env DAILY_BACKUP=0 --env STOP_CONTAINERS=1  nextcloud-aio-mastercontainer /daily-backup.sh || log "nextcloud stop hook failed (continuing)"
     sudo docker exec --env DAILY_BACKUP=0 --env START_CONTAINERS=1 nextcloud-aio-mastercontainer /daily-backup.sh || log "nextcloud start hook failed (continuing)"
   else
+    docker stop nextcloud-aio-apache
+    sleep 10
     docker exec --env DAILY_BACKUP=0 --env STOP_CONTAINERS=1  nextcloud-aio-mastercontainer /daily-backup.sh || log "nextcloud stop hook failed (continuing)"
     docker exec --env DAILY_BACKUP=0 --env START_CONTAINERS=1 nextcloud-aio-mastercontainer /daily-backup.sh || log "nextcloud start hook failed (continuing)"
   fi

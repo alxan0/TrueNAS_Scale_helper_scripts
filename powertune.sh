@@ -1,11 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 # SATA ALPM
 #for d in /sys/class/scsi_host/host*/link_power_management_policy; do
 #    echo min_power > "$d"
 #done
 
-# USB autosuspend
+# --- USB autosuspend ---
 for dev in /sys/bus/usb/devices/*/power/control; do
     echo auto > "$dev"
 done
