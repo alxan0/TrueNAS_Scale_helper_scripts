@@ -49,7 +49,6 @@ for rel in $releases_sorted; do
 done
 unset IFS
 
-# Safety belt (normally $TARGET (the freshly deployed release) will never appear in $to_delete)
 filtered=()
 for d in "${to_delete[@]:-}"; do
   [ "$d" = "$TARGET" ] && continue
@@ -60,9 +59,8 @@ if [ "${#filtered[@]}" -gt 0 ]; then
   printf 'Pruning %d old release(s):\n' "${#filtered[@]}"
   for d in "${filtered[@]}"; do
     echo "  - $d"
-    rm -rf -- "$d"
+    rm -r -- "$d"
   done
 fi
 
-# --- set permissions ---
 sudo chmod -R 550 ${ROOT}/TrueNAS_helper_scripts

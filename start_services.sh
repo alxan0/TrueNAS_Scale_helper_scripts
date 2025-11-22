@@ -8,8 +8,8 @@ ROOT="/mnt/pool0/appdata/dockge/stacks"
 ORDER=(
   socket-proxy
   traefik
+  beszel-hub
   frigate-main
-  qbittorrent
   gopeed
   jellyfin
   kavita
@@ -17,6 +17,8 @@ ORDER=(
   forgejo
   immich
   homepage
+  stirling-pdf
+  audiobookshelf
 )
 
 COMPOSE_BIN="${COMPOSE_BIN:-/usr/bin/docker compose}"
@@ -24,7 +26,6 @@ COMPOSE_BIN="${COMPOSE_BIN:-/usr/bin/docker compose}"
 log() { printf "[%(%F %T)T] %s\n" -1 "$*"; }
 die() { log "ERROR: $*"; exit 1; }
 
-# Ensure compose is callable
 if ! command -v docker &>/dev/null; then
   die "docker not found in PATH"
 fi
@@ -101,17 +102,11 @@ stop_stack() {
 do_nextcloud_cycle() {
   # Start/stop orchestration for Nextcloud AIO mastercontainer
   # Only run during 'start' or 'restart'
-  if command -v sudo &>/dev/null; then
-    sudo docker stop nextcloud-aio-apache
-    sleep 10
-    sudo docker exec --env DAILY_BACKUP=0 --env STOP_CONTAINERS=1  nextcloud-aio-mastercontainer /daily-backup.sh || log "nextcloud stop hook failed (continuing)"
-    sudo docker exec --env DAILY_BACKUP=0 --env START_CONTAINERS=1 nextcloud-aio-mastercontainer /daily-backup.sh || log "nextcloud start hook failed (continuing)"
-  else
-    docker stop nextcloud-aio-apache
-    sleep 10
-    docker exec --env DAILY_BACKUP=0 --env STOP_CONTAINERS=1  nextcloud-aio-mastercontainer /daily-backup.sh || log "nextcloud stop hook failed (continuing)"
-    docker exec --env DAILY_BACKUP=0 --env START_CONTAINERS=1 nextcloud-aio-mastercontainer /daily-backup.sh || log "nextcloud start hook failed (continuing)"
-  fi
+  docker stop nextcloud-aio-apache
+  sleep 10
+  docker exec --env DAILY_BACKUP=0 --env STOP_CONTAINERS=1  nextcloud-aio-mastercontainer /daily-backup.sh || log "nextcloud stop hook failed (continuing)"
+  sleep 3
+  docker exec --env DAILY_BACKUP=0 --env START_CONTAINERS=1 nextcloud-aio-mastercontainer /daily-backup.sh || log "nextcloud start hook failed (continuing)"
 }
 
 
