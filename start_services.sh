@@ -6,11 +6,11 @@ ROOT="/mnt/pool0/appdata/dockge/stacks"
 # === EDIT THIS ORDER ===
 # Put only the stack folder names you want to manage, in dependency-safe start order.
 ORDER=(
+  borgmatic
   socket-proxy
   traefik
   beszel-hub
   frigate-main
-  gopeed
   jellyfin
   kavita
   nextcloud-aio
@@ -18,6 +18,7 @@ ORDER=(
   immich
   homepage
   stirling-pdf
+  bentopdf
   audiobookshelf
 )
 
