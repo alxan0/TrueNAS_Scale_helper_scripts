@@ -22,8 +22,8 @@ else
     log "lzo-rle not available, falling back to lzo"
 fi
 
-echo 4G > /sys/block/zram0/disksize
-log "Disk size: 4G"
+echo 8G > /sys/block/zram0/disksize
+log "Disk size: 8G"
 
 mkswap --label zram0 /dev/zram0
 swapon --priority 100 /dev/zram0
