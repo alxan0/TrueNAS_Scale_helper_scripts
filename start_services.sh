@@ -9,17 +9,18 @@ ORDER=(
   borgmatic
   socket-proxy
   traefik
+  authentik
   beszel-hub
   frigate-main
   jellyfin
-  kavita
+  audiobookshelf
+  media_stack
+  qbittorrent
   nextcloud-aio
   forgejo
   immich
   homepage
-  stirling-pdf
   bentopdf
-  audiobookshelf
 )
 
 COMPOSE_BIN="${COMPOSE_BIN:-/usr/bin/docker compose}"
